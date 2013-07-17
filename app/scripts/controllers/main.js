@@ -1,10 +1,9 @@
 'use strict';
 
 angular.module('angularLocaleBundlesApp')
-  .controller('MainCtrl', ['$scope', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  }]);
+    .controller('MainCtrl', ['$scope', 'localeBundleFactory', function ($scope, localeBundleFactory) {
+
+        var bundle = localeBundleFactory('awesome-things', '-en_US');
+
+        $scope.awesomeThings = bundle.translations;
+    }]);

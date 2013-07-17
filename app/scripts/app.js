@@ -11,6 +11,6 @@ angular.module('angularLocaleBundlesApp', ['angular-locale-bundles'])
                 redirectTo: '/'
             });
 
-        localeBundleFactoryProvider.url('/i18n/{{bundle}}.json');
+        localeBundleFactoryProvider.url('/i18n/{{bundle}}{{locale}}.json');
         localeBundleFactoryProvider.useAcceptLanguageHeader(false);
     }]);
