@@ -1,0 +1,19 @@
+{
+    "name": "angular-locale-bundles",
+    "version": "0.1.0",
+    "main": ["src/angular-locale-bundles.js"],
+    "ignore": [
+        "app",
+        "test",
+        ".jshintrc"
+    ],
+    "dependencies": {
+        "angular": "~1.0.7"
+    },
+    "devDependencies": {
+        "json3": "~3.2.4",
+        "es5-shim": "~2.0.8",
+        "angular-mocks": "~1.0.7",
+        "angular-scenario": "~1.0.7"
+    }
+}
