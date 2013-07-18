@@ -1,6 +1,9 @@
 {
     "name": "angular-locale-bundles",
     "version": "0.1.0",
+    "scripts": {
+        "test": "grunt test"
+    },
     "dependencies": {
         "grunt-karma": "~0.4.5"
     },
