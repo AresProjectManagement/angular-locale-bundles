@@ -148,6 +148,19 @@ describe('Service: localeBundleFactory', function () {
 
             }));
 
+            it('LocaleBundle.addToScope should add translations to the passed scope prefixed with "_t"', inject(function ($rootScope, $parse) {
+
+                var scope = $rootScope.$new();
+
+                bundle.addToScope(scope, '_t');
+
+                $httpBackend.flush();
+
+                expect($parse('_t.user.usernameLabel')(scope)).toBe('Username');
+                expect($parse('_t.user.usernamePlaceholder')(scope)).toBe('enter your username');
+
+            }));
+
             it('LocaleBundle.get should return a promise that resolves to a translation value', function () {
 
                 var then = jasmine.createSpy('success');

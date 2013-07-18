@@ -11,7 +11,7 @@ describe('Directive: localeBundle', function () {
         })
     });
 
-    it('should add the "foo" bundle translations to the scope', inject(function ($rootScope, $compile) {
+    it('should add the "foo" bundle translations to the scope prefixed with bundle', inject(function ($rootScope, $compile) {
 
         var bundle = jasmine.createSpyObj('bundle', ['addToScope']);
 
@@ -21,6 +21,19 @@ describe('Directive: localeBundle', function () {
         element = $compile(element)($rootScope);
 
         expect(localeBundleFactory).toHaveBeenCalledWith('foo');
-        expect(bundle.addToScope).toHaveBeenCalledWith($rootScope);
+        expect(bundle.addToScope).toHaveBeenCalledWith($rootScope, 'bundle');
+    }));
+
+    it('should add the "foo" bundle translations to the scope prefixed with _t', inject(function ($rootScope, $compile) {
+
+        var bundle = jasmine.createSpyObj('bundle', ['addToScope']);
+
+        localeBundleFactory.andReturn(bundle);
+
+        var element = angular.element('<div locale-bundle="foo as _t"></div>');
+        element = $compile(element)($rootScope);
+
+        expect(localeBundleFactory).toHaveBeenCalledWith('foo');
+        expect(bundle.addToScope).toHaveBeenCalledWith($rootScope, '_t');
     }));
 });

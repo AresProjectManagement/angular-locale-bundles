@@ -40,23 +40,34 @@ angular.module('app', ['angular-locale-bundles'])
 
 ### `locale-bundle` directive
 
-Use the `locale-bundle` directive to apply a locale bundle's translations to the scope of the directive.
+Use the `locale-bundle` directive to apply a locale bundle's translations to the scope of the directive.  The directive also
+sets a `$watch` for `<prefix>.locale` and applies the new locale into the scope.
 
 ```html
+<header>
+    <select ng-model="bundle.locale" ng-options="locale.value as locale.name for locale in locales"></select>
+</header>
+
+<!-- fetch the `hero-unit` bundle and apply the current scope prefixed with `bundle.` (default) -->
 <div class="hero-unit" locale-bundle="hero-unit">
     <h1>{{ bundle.greeting }}</h1>
 
-    <p>{{ bundle.installedLibraries }}</p>
+    <p>{{ bundle.numbersLabel }}</p>
     <ul>
-        <li ng-repeat="thing in awesomeThings">{{thing}}</li>
+        <li ng-repeat="number in numbers">{{number}}</li>
     </ul>
 
     <h3>{{ bundle.enjoy.coding }}</h3>
 </div>
 
-<footer locale-bundle="footer">
-    <p><small>{{ bundle.copyright }}</small></p>
+<!-- fetch the `footer` bundle and apply the current scope prefixed with `_t.` -->
+<footer locale-bundle="footer as _t">
+    <select ng-model="_t.locale" ng-options="locale.value as locale.name for locale in locales"></select>
+    <p>
+        <small>{{ _t.copyright }}</small>
+    </p>
 </footer>
+
 ```
 
 ### `localeBundleFactory` service
@@ -78,8 +89,8 @@ angular.module('angularLocaleBundlesApp')
 #### `translations`
 A [promise](http://docs.angularjs.org/api/ng.$q) that resolves the bundle's translations.
 
-#### `addToScope(scope)`
-Adds the bundle's translations to the given scope
+#### `addToScope(scope, prefix)`
+Adds the bundle's translations to the given scope with given prefix.  Default prefix is `bundle.`.
 
 #### `get(translation)`
 Returns a [promise](http://docs.angularjs.org/api/ng.$q) that resolves a translation value.

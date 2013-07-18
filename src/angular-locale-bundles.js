@@ -15,10 +15,11 @@
                 return {};
             });
 
-        this.addToScope = function (scope) {
+        this.addToScope = function (scope, prefix) {
+            prefix = prefix || 'bundle';
             _self.translations.then(function (translations) {
                 angular.forEach(translations, function (value, key) {
-                    $parse('bundle.' + key).assign(scope, value);
+                    $parse(prefix + '.' + key).assign(scope, value);
                 });
             });
         };
@@ -62,13 +63,6 @@
             _httpCache = cache;
         };
 
-        function _createUrl(bundle, locale) {
-            if (locale) {
-                return _bundleLocaleUrl.replace('{{bundle}}', bundle || '').replace('{{locale}}', locale || '');
-            }
-            return _bundleUrl.replace('{{bundle}}', bundle || '');
-        }
-
         this.$get = function ($http, $parse) {
             return function (bundle, locale) {
                 var url = _createUrl(bundle, locale);
@@ -84,15 +78,52 @@
         };
         this.$get.$inject = ['$http', '$parse'];
 
+        function _createUrl(bundle, locale) {
+            if (locale) {
+                return _bundleLocaleUrl.replace('{{bundle}}', bundle || '').replace('{{locale}}', locale || '');
+            }
+            return _bundleUrl.replace('{{bundle}}', bundle || '');
+        }
+
     };
 
     var localeBundleDirective = function (localeBundleFactory) {
+
+        function parseLocaleBundleAttr(attr) {
+            if (!attr || attr.trim().length === 0) {
+                return null;
+            }
+
+            var details = {
+                    bundle: attr,
+                    prefix: 'bundle'
+                },
+                parts = [];
+
+            if (attr.indexOf(' as ') > -1) {
+                parts = attr.split(/\s+as\s+/);
+                details.bundle = parts[0];
+                details.prefix = parts[1];
+            }
+
+            return details;
+        }
+
         return {
             link: function (scope, element, attrs) {
-                if (!attrs.localeBundle) {
+                var bundleDetails = parseLocaleBundleAttr(attrs.localeBundle);
+                if (!bundleDetails) {
                     return;
                 }
-                localeBundleFactory(attrs.localeBundle).addToScope(scope);
+
+                localeBundleFactory(bundleDetails.bundle).addToScope(scope, bundleDetails.prefix);
+                scope.$watch(bundleDetails.prefix + '.locale', function (locale) {
+                    if (!locale || locale.trim().length === 0) {
+                        localeBundleFactory(bundleDetails.bundle).addToScope(scope, bundleDetails.prefix);
+                    } else {
+                        localeBundleFactory(bundleDetails.bundle, locale).addToScope(scope, bundleDetails.prefix);
+                    }
+                });
             }
         };
     };
