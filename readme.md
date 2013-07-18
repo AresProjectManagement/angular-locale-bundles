@@ -1,5 +1,9 @@
 # angular-locale-bundles
 
+[![Build Status](https://travis-ci.org/AresProjectManagement/angular-locale-bundles.png?branch=master)](https://travis-ci.org/AresProjectManagement/angular-locale-bundles)
+
+> Internationalization and localization service and directive for AngularJs
+
 ## Installation
 
 Download [angular-locale-bundles.js](https://github.com/AresProjectManagement/angular-locale-bundles/blob/master/src/angular-locale-bundles.js) or install with bower.
