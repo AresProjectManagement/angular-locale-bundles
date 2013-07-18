@@ -17,11 +17,22 @@ Load the `angular-locale-bundles` modules into your app and configure...
 ```javascript
 angular.module('app', ['angular-locale-bundles'])
     .config(['localeBundleFactoryProvider', function (localeBundleFactoryProvider) {
+        // URL pattern to fetch locale bundles.  Placeholders: {{bundle}}
+        localeBundleFactoryProvider.bundleUrl('/i18n/{{bundle}}.json');
+
         // URL pattern to fetch locale bundles.  Placeholders: {{bundle}} and {{locale}}
-        localeBundleFactoryProvider.url('/i18n/{{bundle}}.json');
+        localeBundleFactoryProvider.bundleLocaleUrl('/i18n/{{bundle}}-{{locale}}.json');
 
         // Add the locale to the 'Accept-Language' header.  Default is true.
         localeBundleFactoryProvider.useAcceptLanguageHeader(true);
+
+        // Cache AJAX requests.  Default is true.
+        localeBundleFactoryProvider.enableHttpCache(true);
+
+        // Transform responses.  Default returns 'response.data'.
+        localeBundleFactoryProvider.responseTransformer(function (response) {
+            return response.data.body;
+        });
     }]);
 ```
 
@@ -56,7 +67,7 @@ Use `localeBundleFactory` to manually fetch locale bundles and apply them to sco
 angular.module('angularLocaleBundlesApp')
     .controller('MainCtrl', ['$scope', 'localeBundleFactory', function ($scope, localeBundleFactory) {
 
-        var bundle = localeBundleFactory('awesome-things', '-en_US');
+        var bundle = localeBundleFactory('awesome-things', 'en_US');
 
         $scope.awesomeThings = bundle.translations;
     }])
@@ -72,6 +83,10 @@ Adds the bundle's translations to the given scope
 
 #### `get(translation)`
 Returns a [promise](http://docs.angularjs.org/api/ng.$q) that resolves a translation value.
+
+### Sample App
+
+See https://github.com/AresProjectManagement/angular-locale-bundles/tree/master/app.
 
 ## Contributing
 

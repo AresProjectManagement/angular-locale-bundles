@@ -1,8 +1,26 @@
 {
     "name": "angular-locale-bundles",
     "description": "Internationalization and localization service and directive for AngularJs",
-    "version": "0.1.0",
-    "main": ["src/angular-locale-bundles.js"],
+    "version": "0.1.1",
+    "author": "Ares Project Management LLC <code@prismondemand.com>",
+    "contributors": [
+        {
+            "name": "Luke Bunselmeyer",
+            "email": "wmlukeb@gmail.com"
+        }
+    ],
+    "homepage": "https://github.com/AresProjectManagement/angular-locale-bundles",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/AresProjectManagement/angular-locale-bundles.git"
+    },
+    "bugs": {
+        "url": "https://github.com/AresProjectManagement/angular-locale-bundles/issues"
+    },
+    "main": [
+        "dist/angular-locale-bundles.js",
+        "dist/angular-locale-bundles.min.js"
+    ],
     "ignore": [
         "app",
         "test",
@@ -17,5 +35,6 @@
     "devDependencies": {
         "angular-mocks": "~1.0.7",
         "angular-scenario": "~1.0.7"
-    }
+    },
+    "license": "MIT"
 }

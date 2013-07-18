@@ -7,11 +7,12 @@ describe('Service: localeBundleFactory', function () {
         module('angular-locale-bundles');
     });
 
-    describe('Config Option A', function () {
+    describe('Config Option: useAcceptLanguageHeader = false', function () {
         // load the service's module
         beforeEach(function () {
             module(function (localeBundleFactoryProvider) {
-                localeBundleFactoryProvider.url('/i18n/{{bundle}}_{{locale}}.json');
+                localeBundleFactoryProvider.bundleLocaleUrl('/i18n/{{bundle}}_{{locale}}.json');
+                localeBundleFactoryProvider.bundleUrl('/i18n/{{bundle}}.json');
                 localeBundleFactoryProvider.useAcceptLanguageHeader(false);
             });
         });
@@ -45,7 +46,7 @@ describe('Service: localeBundleFactory', function () {
 
             var headers = {"Accept": "application/json, text/plain, */*", "X-Requested-With": "XMLHttpRequest"};
 
-            $httpBackend.expectGET('/i18n/:bundle_.json', headers).respond({body: {a: 1, b: 2}});
+            $httpBackend.expectGET('/i18n/:bundle.json', headers).respond({body: {a: 1, b: 2}});
 
             var bundle = localeBundleFactory(':bundle');
 
@@ -54,13 +55,17 @@ describe('Service: localeBundleFactory', function () {
     });
 
 
-    describe('Config Option B', function () {
+    describe('Config Option: : useAcceptLanguageHeader = true', function () {
 
         // load the service's module
         beforeEach(function () {
             module(function (localeBundleFactoryProvider) {
-                localeBundleFactoryProvider.url('/i18n/{{bundle}}.json');
+                localeBundleFactoryProvider.bundleLocaleUrl('/i18n/{{bundle}}_{{locale}}.json');
+                localeBundleFactoryProvider.bundleUrl('/i18n/{{bundle}}.json');
                 localeBundleFactoryProvider.useAcceptLanguageHeader(true);
+                localeBundleFactoryProvider.responseTransformer(function (response) {
+                    return response.data.body;
+                });
             });
         });
 
@@ -83,7 +88,7 @@ describe('Service: localeBundleFactory', function () {
 
             var headers = {"Accept": "application/json, text/plain, */*", "X-Requested-With": "XMLHttpRequest", "Accept-Language": ":locale"};
 
-            $httpBackend.expectGET('/i18n/:bundle.json', headers).respond({body: {a: 1, b: 2}});
+            $httpBackend.expectGET('/i18n/:bundle_:locale.json', headers).respond({body: {a: 1, b: 2}});
 
             var bundle = localeBundleFactory(':bundle', ':locale');
 

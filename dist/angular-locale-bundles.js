@@ -1,3 +1,8 @@
+/**! 
+ * @license angular-locale-bundles v0.1.1
+ * Copyright (c) 2013 Ares Project Management LLC <code@prismondemand.com>. https://github.com/AresProjectManagement/angular-locale-bundles
+ * License: MIT
+ */
 (function () {
     'use strict';
 

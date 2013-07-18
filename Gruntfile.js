@@ -29,6 +29,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         yeoman: yeomanConfig,
+        pkg: grunt.file.readJSON('bower.json'),
         watch: {
             livereload: {
                 options: {
@@ -90,6 +91,37 @@ module.exports = function (grunt) {
                 'src/*.js'
             ]
         },
+        concat: {
+            options: {
+                banner: ['/**! ',
+                    ' * @license <%= pkg.name %> v<%= pkg.version %>',
+                    ' * Copyright (c) 2013 <%= pkg.author %>. <%= pkg.homepage %>',
+                    ' * License: <%= pkg.license %>',
+                    ' */\n'].join('\n')
+            },
+            main: {
+                src: [
+                    'src/angular-locale-bundles.js'
+                ],
+                dest: 'dist/<%= pkg.name %>.js'
+            }
+        },
+        uglify: {
+            options: {
+                banner: ['/**! ',
+                    ' * @license <%= pkg.name %> v<%= pkg.version %>',
+                    ' * Copyright (c) 2013 <%= pkg.author.name %>. <%= pkg.homepage %>',
+                    ' * License: MIT',
+                    ' */\n'].join('\n')
+            },
+            main: {
+                files: {
+                    'dist/<%= pkg.name %>.min.js': [
+                        '<%= concat.main.dest %>'
+                    ]
+                }
+            }
+        },
         karma: {
             unit: {
                 configFile: 'karma.conf.js',
@@ -100,7 +132,15 @@ module.exports = function (grunt) {
                 singleRun: false,
                 browsers: ['Chrome']
             }
-        }
+        },
+        bumpup: ['package.json', 'bower.json']
+    });
+
+    grunt.registerTask('bump', function (type) {
+        type = type ? type : 'patch';
+        grunt.task.run([
+            'bumpup:' + type,
+        ]);
     });
 
     grunt.registerTask('server', function () {
@@ -130,7 +170,9 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'jshint',
-        'test'
+        'test',
+        'concat',
+        'uglify'
     ]);
 
     grunt.registerTask('default', [

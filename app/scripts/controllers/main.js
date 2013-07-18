@@ -3,7 +3,7 @@
 angular.module('angularLocaleBundlesApp')
     .controller('MainCtrl', ['$scope', 'localeBundleFactory', function ($scope, localeBundleFactory) {
 
-        var bundle = localeBundleFactory('awesome-things', '-en_US');
+        var bundle = localeBundleFactory('awesome-things', 'en_US');
 
         $scope.awesomeThings = bundle.translations;
     }]);
