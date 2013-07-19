@@ -24,10 +24,16 @@
     "ignore": [
         "app",
         "test",
+        ".idea",
+        ".tmp",
+        "src",
+        "node_modules",
         ".jshintrc",
         ".travis.yml",
         "karma.conf.js",
-        "Gruntfile.js"
+        "karma-e2e.conf.js",
+        "Gruntfile.js",
+        "package.js"
     ],
     "dependencies": {
         "angular": "~1.0.7"
