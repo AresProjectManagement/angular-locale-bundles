@@ -4,3 +4,4 @@ node_modules
 app/bower_components
 libpeerconnection.log
 .idea/workspace.xml
+reports
