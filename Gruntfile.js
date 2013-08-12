@@ -1,5 +1,6 @@
 // Generated on 2013-07-17 using generator-angular 0.3.0
 'use strict';
+var coveralls = require('coveralls');
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
 var mountFolder = function (connect, dir) {
@@ -134,6 +135,16 @@ module.exports = function (grunt) {
             }
         },
         bumpup: ['package.json', 'bower.json']
+    });
+
+    grunt.registerTask('coveralls', function () {
+        var matches = grunt.file.expand('reports/coverage/*/lcov.info');
+        if (!matches || matches.length === 0) {
+            grunt.log.write('No lcov found.');
+            return;
+        }
+        var content = grunt.file.read(matches);
+        coveralls.handleInput(content);
     });
 
     grunt.registerTask('bump', function (type) {
