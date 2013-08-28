@@ -33,7 +33,7 @@ describe('Service: localeBundleFactory', function () {
 
         it('should create a LocaleBundle and fetch the locale bundle with the locale set in the url', function () {
 
-            var headers = {"Accept": "application/json, text/plain, */*", "X-Requested-With": "XMLHttpRequest"};
+            var headers = {"Accept": "application/json, text/plain, */*"};
 
             $httpBackend.expectGET('/i18n/:bundle_:locale.json', headers).respond({body: {a: 1, b: 2}});
 
@@ -44,7 +44,7 @@ describe('Service: localeBundleFactory', function () {
 
         it('should create a LocaleBundle and fetch the locale bundle', function () {
 
-            var headers = {"Accept": "application/json, text/plain, */*", "X-Requested-With": "XMLHttpRequest"};
+            var headers = {"Accept": "application/json, text/plain, */*"};
 
             $httpBackend.expectGET('/i18n/:bundle.json', headers).respond({body: {a: 1, b: 2}});
 
@@ -86,7 +86,7 @@ describe('Service: localeBundleFactory', function () {
 
         it('should create a LocaleBundle and fetch the locale bundle with the locale set in the "Accept-Language" header', function () {
 
-            var headers = {"Accept": "application/json, text/plain, */*", "X-Requested-With": "XMLHttpRequest", "Accept-Language": ":locale"};
+            var headers = {"Accept": "application/json, text/plain, */*", "Accept-Language": ":locale"};
 
             $httpBackend.expectGET('/i18n/:bundle_:locale.json', headers).respond({body: {a: 1, b: 2}});
 
@@ -97,7 +97,7 @@ describe('Service: localeBundleFactory', function () {
 
         it('should create a LocaleBundle and fetch the locale bundle', function () {
 
-            var headers = {"Accept": "application/json, text/plain, */*", "X-Requested-With": "XMLHttpRequest"};
+            var headers = {"Accept": "application/json, text/plain, */*"};
 
             $httpBackend.expectGET('/i18n/:bundle.json', headers).respond({body: {a: 1, b: 2}});
 
