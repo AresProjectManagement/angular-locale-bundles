@@ -42,11 +42,16 @@
     var localeBundleFactoryProvider = function () {
         var _bundleUrl,
             _bundleLocaleUrl,
+            _httpOpts = {},
             _useAcceptLang = true,
             _httpCache = true,
             _responseTransformer = function (response) {
                 return response.data;
             };
+
+        this.httpConfig = function (httpConfig) {
+            angular.extend(_httpOpts, httpConfig);
+        };
 
         this.bundleUrl = function (url) {
             _bundleUrl = url;
@@ -75,6 +80,9 @@
                     headers: locale && _useAcceptLang ? {'Accept-Language': locale} : undefined,
                     cache: _httpCache
                 };
+
+                angular.extend(httpOpts, _httpOpts);
+
                 return new LocaleBundle($http, $parse, url, {
                     httpOpts: httpOpts,
                     responseTransformer: _responseTransformer
