@@ -18,8 +18,7 @@
         "url": "https://github.com/AresProjectManagement/angular-locale-bundles/issues"
     },
     "main": [
-        "dist/angular-locale-bundles.js",
-        "dist/angular-locale-bundles.min.js"
+        "dist/angular-locale-bundles.js"
     ],
     "ignore": [
         "app",
