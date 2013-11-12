@@ -24,16 +24,16 @@ describe('Directive: localeBundle', function () {
         expect(bundle.addToScope).toHaveBeenCalledWith($rootScope, 'bundle');
     }));
 
-    it('should add the "foo" bundle translations to the scope prefixed with _t', inject(function ($rootScope, $compile) {
+    it('should add the "foo" bundle translations to the scope prefixed with translations', inject(function ($rootScope, $compile) {
 
         var bundle = jasmine.createSpyObj('bundle', ['addToScope']);
 
         localeBundleFactory.andReturn(bundle);
 
-        var element = angular.element('<div locale-bundle="foo as _t"></div>');
+        var element = angular.element('<div locale-bundle="foo as translations"></div>');
         element = $compile(element)($rootScope);
 
         expect(localeBundleFactory).toHaveBeenCalledWith('foo');
-        expect(bundle.addToScope).toHaveBeenCalledWith($rootScope, '_t');
+        expect(bundle.addToScope).toHaveBeenCalledWith($rootScope, 'translations');
     }));
 });

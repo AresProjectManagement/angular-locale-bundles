@@ -165,16 +165,16 @@ describe('Service: localeBundleFactory', function () {
 
                 }));
 
-                it('should add translations to the passed scope prefixed with "_t"', inject(function ($rootScope, $parse) {
+                it('should add translations to the passed scope prefixed with "translations"', inject(function ($rootScope, $parse) {
 
                     var scope = $rootScope.$new();
 
-                    bundle.addToScope(scope, '_t');
+                    bundle.addToScope(scope, 'translations');
 
                     $httpBackend.flush();
 
-                    expect($parse('_t.user.usernameLabel')(scope)).toBe('Username');
-                    expect($parse('_t.user.usernamePlaceholder')(scope)).toBe('enter your username');
+                    expect($parse('translations.user.usernameLabel')(scope)).toBe('Username');
+                    expect($parse('translations.user.usernamePlaceholder')(scope)).toBe('enter your username');
                 }));
 
                 it('should add translations to the passed scope BUT "child" namespaces will clobbered by "parent" namespaces', inject(function ($rootScope, $parse) {

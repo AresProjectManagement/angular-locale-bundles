@@ -60,11 +60,11 @@ sets a `$watch` for `<prefix>.locale` and applies the new locale into the scope.
     <h3>{{ bundle.enjoy.coding }}</h3>
 </div>
 
-<!-- fetch the `footer` bundle and apply the current scope prefixed with `_t.` -->
-<footer locale-bundle="footer as _t">
-    <select ng-model="_t.locale" ng-options="locale.value as locale.name for locale in locales"></select>
+<!-- fetch the `footer` bundle and apply the current scope prefixed with `translations.` -->
+<footer locale-bundle="footer as translations">
+    <select ng-model="translations.locale" ng-options="locale.value as locale.name for locale in locales"></select>
     <p>
-        <small>{{ _t.copyright }}</small>
+        <small>{{ translations.copyright }}</small>
     </p>
 </footer>
 
