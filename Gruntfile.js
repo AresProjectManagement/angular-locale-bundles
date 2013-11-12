@@ -131,7 +131,8 @@ module.exports = function (grunt) {
             debug: {
                 configFile: 'karma.conf.js',
                 singleRun: false,
-                browsers: ['Chrome']
+                browsers: ['Chrome'],
+                reporters: ['progress', 'junit']
             }
         },
         bumpup: ['package.json', 'bower.json']

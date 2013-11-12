@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angularLocaleBundlesApp', ['angular-locale-bundles'])
+angular.module('angularLocaleBundlesApp', ['ngRoute', 'angular-locale-bundles'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/', {

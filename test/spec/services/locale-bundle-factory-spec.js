@@ -114,7 +114,10 @@ describe('Service: localeBundleFactory', function () {
 
                 translations = {
                     'user.usernameLabel': 'Username',
-                    'user.usernamePlaceholder': 'enter your username'
+                    'user.usernamePlaceholder': 'enter your username',
+                    'parent': 'aaa',
+                    'parent.child1': 'bbb',
+                    'parent.child2': 'ccc'
                 };
 
                 $httpBackend.expectGET('/i18n/:bundle.json').respond({body: translations});
@@ -124,53 +127,97 @@ describe('Service: localeBundleFactory', function () {
 
             it('should contain a translations promise', function () {
 
-                var then = jasmine.createSpy('success');
+                var success = jasmine.createSpy('success');
 
                 expect(bundle.translations).toBeTruthy();
-                bundle.translations.then(then);
+                bundle.translations.then(success);
 
                 $httpBackend.flush();
 
-                expect(then).toHaveBeenCalledWith(translations);
+                expect(success).toHaveBeenCalledWith(translations);
 
             });
 
-            it('LocaleBundle.addToScope should add translations to the passed scope prefixed with "bundle"', inject(function ($rootScope, $parse) {
-
-                var scope = $rootScope.$new();
-
-                bundle.addToScope(scope);
-
-                $httpBackend.flush();
-
-                expect($parse('bundle.user.usernameLabel')(scope)).toBe('Username');
-                expect($parse('bundle.user.usernamePlaceholder')(scope)).toBe('enter your username');
-
-            }));
-
-            it('LocaleBundle.addToScope should add translations to the passed scope prefixed with "_t"', inject(function ($rootScope, $parse) {
-
-                var scope = $rootScope.$new();
-
-                bundle.addToScope(scope, '_t');
-
-                $httpBackend.flush();
-
-                expect($parse('_t.user.usernameLabel')(scope)).toBe('Username');
-                expect($parse('_t.user.usernamePlaceholder')(scope)).toBe('enter your username');
-
-            }));
-
             it('LocaleBundle.get should return a promise that resolves to a translation value', function () {
 
-                var then = jasmine.createSpy('success');
+                var success = jasmine.createSpy('success');
 
-                bundle.get('user.usernameLabel').then(then);
+                bundle.get('user.usernameLabel').then(success);
 
                 $httpBackend.flush();
 
-                expect(then).toHaveBeenCalledWith('Username');
+                expect(success).toHaveBeenCalledWith('Username');
 
+            });
+
+            describe('LocaleBundle.addToScope', function () {
+
+                it('should add translations to the passed scope prefixed with "bundle"', inject(function ($rootScope, $parse) {
+
+                    var scope = $rootScope.$new();
+
+                    bundle.addToScope(scope);
+
+                    $httpBackend.flush();
+
+                    expect($parse('bundle.user.usernameLabel')(scope)).toBe('Username');
+                    expect($parse('bundle.user.usernamePlaceholder')(scope)).toBe('enter your username');
+
+                }));
+
+                it('should add translations to the passed scope prefixed with "_t"', inject(function ($rootScope, $parse) {
+
+                    var scope = $rootScope.$new();
+
+                    bundle.addToScope(scope, '_t');
+
+                    $httpBackend.flush();
+
+                    expect($parse('_t.user.usernameLabel')(scope)).toBe('Username');
+                    expect($parse('_t.user.usernamePlaceholder')(scope)).toBe('enter your username');
+                }));
+
+                it('should add translations to the passed scope BUT "child" namespaces will clobbered by "parent" namespaces', inject(function ($rootScope, $parse) {
+
+                    var scope = $rootScope.$new();
+
+                    bundle.addToScope(scope);
+
+                    $httpBackend.flush();
+
+                    expect($parse('bundle.parent')(scope)).toBe('aaa');
+                    expect($parse('bundle.parent.child1')(scope)).toBeUndefined();
+                    expect($parse('bundle.parent.child2')(scope)).toBeUndefined();
+                }));
+            });
+
+            describe('LocaleBundle.filter', function () {
+
+                it('should filter translations based on the predicate function', inject(function ($rootScope, $parse) {
+                    var scope = $rootScope.$new();
+
+                    var filteredBundle = bundle.filter(function (value, key) {
+                        return key.indexOf('parent.') > -1;
+                    });
+
+                    var success = jasmine.createSpy('success');
+
+                    expect(filteredBundle.translations).toBeTruthy();
+                    filteredBundle.translations.then(success);
+
+                    filteredBundle.addToScope(scope, 'filtered');
+
+                    $httpBackend.flush();
+
+                    expect(success).toHaveBeenCalledWith({
+                        'parent.child1': 'bbb',
+                        'parent.child2': 'ccc'
+                    });
+
+                    expect($parse('filtered.parent.child1')(scope)).toBe('bbb');
+                    expect($parse('filtered.parent.child2')(scope)).toBe('ccc');
+
+                }));
             });
 
         });

@@ -1,5 +1,5 @@
 /**! 
- * @license angular-locale-bundles v0.1.4
+ * @license angular-locale-bundles v0.1.5
  * Copyright (c) 2013 Ares Project Management LLC <code@prismondemand.com>. https://github.com/AresProjectManagement/angular-locale-bundles
  * License: MIT
  */
@@ -12,13 +12,16 @@
                 responseTransformer: function (response) {
                     return response.data;
                 },
-                httpOpts: undefined
+                httpOpts: undefined,
+                translations: undefined
             }, options);
 
-        this.translations = $http.get(apiUrl, _options.httpOpts)
-            .then(_options.responseTransformer, function () {
-                return {};
-            });
+        this.translations = (_options.translations && _options.translations.then) ?
+            _options.translations :
+            $http.get(apiUrl, _options.httpOpts)
+                .then(_options.responseTransformer, function () {
+                    return {};
+                });
 
         this.addToScope = function (scope, prefix) {
             prefix = prefix || 'bundle';
@@ -35,6 +38,20 @@
             }, function () {
                 return key;
             });
+        };
+
+        this.filter = function (predicate) {
+            var opts = angular.copy(_options);
+            opts.translations = _self.translations.then(function (translations) {
+                var filtered = {};
+                angular.forEach(translations, function (value, key) {
+                    if (predicate(value, key)) {
+                        filtered[key] = value;
+                    }
+                });
+                return filtered;
+            });
+            return new LocaleBundle($http, $parse, apiUrl, opts);
         };
 
     };
