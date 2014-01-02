@@ -1,6 +1,7 @@
 # angular-locale-bundles
 
 [![Build Status](https://travis-ci.org/AresProjectManagement/angular-locale-bundles.png?branch=master)](https://travis-ci.org/AresProjectManagement/angular-locale-bundles)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/AresProjectManagement/angular-locale-bundles/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 > Internationalization and localization service and directive for AngularJs
 
