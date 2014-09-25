@@ -1,12 +1,12 @@
 /**! 
- * @license angular-locale-bundles v0.1.6
+ * @license angular-locale-bundles v0.1.7
  * Copyright (c) 2013 Ares Project Management LLC <code@prismondemand.com>. https://github.com/AresProjectManagement/angular-locale-bundles
  * License: MIT
  */
 (function () {
     'use strict';
 
-    var LocaleBundle = function ($http, $parse, apiUrl, options) {
+    var LocaleBundle = function ($http, $parse, $log, apiUrl, options) {
         var _self = this,
             _options = angular.extend({
                 responseTransformer: function (response) {
@@ -23,11 +23,23 @@
                     return {};
                 });
 
+        function checkParent(key, scope) {
+            var parts = key.split('.');
+            parts.pop();
+            var parentKey = parts.join('.');
+            return !angular.isString($parse(parentKey)(scope));
+        }
+
         this.addToScope = function (scope, prefix) {
             prefix = prefix || 'bundle';
             _self.translations.then(function (translations) {
                 angular.forEach(translations, function (value, key) {
-                    $parse(prefix + '.' + key).assign(scope, value);
+                    var path = prefix + '.' + key;
+                    if (checkParent(path, scope)) {
+                        $parse(path).assign(scope, value);
+                    } else {
+                        $log.warn('Cannot set `' + path + '` to `' + value + '`. Parent is already set to a string primitive.');
+                    }
                 });
             });
         };
@@ -51,7 +63,7 @@
                 });
                 return filtered;
             });
-            return new LocaleBundle($http, $parse, apiUrl, opts);
+            return new LocaleBundle($http, $parse, $log, apiUrl, opts);
         };
 
     };
@@ -90,7 +102,7 @@
             _httpCache = cache;
         };
 
-        this.$get = function ($http, $parse) {
+        this.$get = function ($http, $parse, $log) {
             return function (bundle, locale) {
                 var url = _createUrl(bundle, locale);
                 var httpOpts = {
@@ -100,13 +112,13 @@
 
                 angular.extend(httpOpts, _httpOpts);
 
-                return new LocaleBundle($http, $parse, url, {
+                return new LocaleBundle($http, $parse, $log, url, {
                     httpOpts: httpOpts,
                     responseTransformer: _responseTransformer
                 });
             };
         };
-        this.$get.$inject = ['$http', '$parse'];
+        this.$get.$inject = ['$http', '$parse', '$log'];
 
         function _createUrl(bundle, locale) {
             if (locale) {
