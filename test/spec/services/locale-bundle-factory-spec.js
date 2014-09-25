@@ -177,7 +177,7 @@ describe('Service: localeBundleFactory', function () {
                     expect($parse('translations.user.usernamePlaceholder')(scope)).toBe('enter your username');
                 }));
 
-                it('should add translations to the passed scope BUT "child" namespaces will clobbered by "parent" namespaces', inject(function ($rootScope, $parse) {
+                it('should add translations to the passed scope BUT "child" namespaces will clobbered by "parent" namespaces', inject(function ($rootScope, $parse, $log) {
 
                     var scope = $rootScope.$new();
 
@@ -188,6 +188,11 @@ describe('Service: localeBundleFactory', function () {
                     expect($parse('bundle.parent')(scope)).toBe('aaa');
                     expect($parse('bundle.parent.child1')(scope)).toBeUndefined();
                     expect($parse('bundle.parent.child2')(scope)).toBeUndefined();
+
+                    expect($log.warn.logs).toEqual([
+                        [ 'Cannot set `bundle.parent.child1` to `bbb`. Parent is already set to a string primitive.' ],
+                        [ 'Cannot set `bundle.parent.child2` to `ccc`. Parent is already set to a string primitive.' ]
+                    ]);
                 }));
             });
 
