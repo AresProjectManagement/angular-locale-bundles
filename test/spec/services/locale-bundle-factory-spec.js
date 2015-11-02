@@ -142,10 +142,17 @@ describe('Service: localeBundleFactory', function () {
 
                 var success = jasmine.createSpy('success');
 
-                bundle.get('user.usernameLabel').then(success);
+                var promise = bundle.get('user.usernameLabel');
+
+                expect(promise.$isResolved).toBe(false);
+                expect(promise.$resolved).toBeUndefined();
+
+                promise.then(success);
 
                 $httpBackend.flush();
 
+                expect(promise.$isResolved).toBe(true);
+                expect(promise.$resolved).toBe('Username');
                 expect(success).toHaveBeenCalledWith('Username');
 
             });
@@ -177,7 +184,11 @@ describe('Service: localeBundleFactory', function () {
                     expect($parse('translations.user.usernamePlaceholder')(scope)).toBe('enter your username');
                 }));
 
-                it('should add translations to the passed scope BUT "child" namespaces will clobbered by "parent" namespaces', inject(function ($rootScope, $parse, $log) {
+                it('should add translations to the passed scope BUT "child" namespaces will clobbered by "parent" namespaces', inject(function (
+                    $rootScope,
+                    $parse,
+                    $log
+                ) {
 
                     var scope = $rootScope.$new();
 
@@ -190,8 +201,8 @@ describe('Service: localeBundleFactory', function () {
                     expect($parse('bundle.parent.child2')(scope)).toBeUndefined();
 
                     expect($log.warn.logs).toEqual([
-                        [ 'Cannot set `bundle.parent.child1` to `bbb`. Parent is already set to a string primitive.' ],
-                        [ 'Cannot set `bundle.parent.child2` to `ccc`. Parent is already set to a string primitive.' ]
+                        ['Cannot set `bundle.parent.child1` to `bbb`. Parent is already set to a string primitive.'],
+                        ['Cannot set `bundle.parent.child2` to `ccc`. Parent is already set to a string primitive.']
                     ]);
                 }));
             });

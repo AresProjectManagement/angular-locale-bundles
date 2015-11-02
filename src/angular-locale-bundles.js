@@ -45,13 +45,13 @@
             }, function () {
                 return key;
             });
-            promise.$isReolved = false;
+            promise.$isResolved = false;
             promise
                 .then(function (result) {
                     promise.$resolved = result;
                 })
                 .finally(function () {
-                    promise.$isReolved = true;
+                    promise.$isResolved = true;
                 });
             return promise;
         };
