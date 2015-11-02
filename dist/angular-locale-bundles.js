@@ -45,11 +45,20 @@
         };
 
         this.get = function (key) {
-            return _self.translations.then(function (translations) {
+            var promise = _self.translations.then(function (translations) {
                 return translations[key] || key;
             }, function () {
                 return key;
             });
+            promise.$isReolved = false;
+            promise
+                .then(function (result) {
+                    promise.$resolved = result;
+                })
+                .finally(function () {
+                    promise.$isReolved = true;
+                });
+            return promise;
         };
 
         this.filter = function (predicate) {
